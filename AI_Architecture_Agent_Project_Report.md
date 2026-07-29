@@ -12,54 +12,50 @@ Organizations lack a unified, intelligent tool capable of dynamically transformi
 
 ## 3. Architecture Diagram
 
-```mermaid
-graph TD
-    %% Frontend Layer
-    subgraph Frontend [Domain 3: Interactive React Flow Dashboard]
-        UI[React Vite UI Dashboard]
-        Store[Zustand State Store]
-        Canvas[React Flow Canvas]
-        Sidebar[History Sidebar]
-        UI <--> Store
-        Store <--> Canvas
-        UI <--> Sidebar
-    end
-
-    %% API Layer
-    subgraph Backend [Domain 1: FastAPI API Gateway]
-        AuthMW[Auth & RBAC Middleware]
-        Router[API Gateway Routers]
-        WSS[WebSocket Connection Manager]
-        DB[(SQLite / SQLAlchemy)]
-        
-        AuthMW --> Router
-        Router --> DB
-        Router --> WSS
-    end
-
-    %% AI Pipeline Layer
-    subgraph AI [Domain 2: Autonomous AI Core]
-        Orchestrator[Agent Orchestrator Loop]
-        Agents[15+ Specialized Agents]
-        SecScanner[IaC Security Scanner & Checkov]
-        TFValidator[Terraform Validator]
-        Pricing[AWS Pricing Integration]
-        LLM[LLM Engine: Groq/Gemini]
-        RAG[Pinecone RAG]
-
-        Orchestrator --> Agents
-        Agents --> LLM
-        Agents --> RAG
-        Agents --> SecScanner
-        Agents --> TFValidator
-        Agents --> Pricing
-    end
-
-    %% Connections
-    Frontend -- HTTP/REST & SSE --> AuthMW
-    WSS -- Real-time Updates --> Frontend
-    Router -- Triggers Pipeline --> Orchestrator
-    Orchestrator -- Persists Results --> DB
+```text
++-------------------------------------------------------------+
+|        Domain 3: Interactive React Flow Dashboard           |
+|                                                             |
+|   [ React Vite UI ] <-------> [ Zustand State Store ]       |
+|          ^                            ^                     |
+|          |                            |                     |
+|          v                            v                     |
+|   [ History Sidebar ]         [ React Flow Canvas ]         |
++-------------------------------------------------------------+
+             ^                               |
+             | (Real-time WS)                | (HTTP/REST)
+             |                               v
++-------------------------------------------------------------+
+|             Domain 1: FastAPI API Gateway                   |
+|                                                             |
+|               [ Auth & RBAC Middleware ]                    |
+|                           |                                 |
+|                           v                                 |
+|                 [ API Gateway Routers ]                     |
+|                           |                                 |
+|       +-------------------+-------------------+             |
+|       |                   |                   |             |
+|       v                   v                   v             |
+| [ SQLite DB ]    [ WS Connection Mgr ]  [ Orchestrator ]    |
++-------------------------------------------------------------+
+        ^                                       |
+        | (Persists Results)                    | (Triggers)
+        |                                       v
++-------------------------------------------------------------+
+|              Domain 2: Autonomous AI Core                   |
+|                                                             |
+|               [ Agent Orchestrator Loop ]                   |
+|                           |                                 |
+|                           v                                 |
+|               [ 15+ Specialized Agents ]                    |
+|                           |                                 |
+|   +---------------+-------+-------+---------------+         |
+|   |               |               |               |         |
+|   v               v               v               v         |
+| [ LLM ]       [ RAG ]       [ Security ]    [ Terraform ]   |
+| (Groq)     (Pinecone)       (Checkov)      (Validator)      |
+|                           [ AWS Pricing ]                   |
++-------------------------------------------------------------+
 ```
 
 ## 4. System Architecture
