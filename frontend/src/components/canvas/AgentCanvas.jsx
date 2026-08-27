@@ -804,6 +804,7 @@ function AgentCanvasInner() {
     const addTableMatch = input.match(/add\s+(?:a?\s*)?(?:new\s+)?table\s+(?:called\s+|named\s+)?["']?(\w+)["']?/i);
     const addCompMatch  = input.match(/add\s+(?:a?\s*)?(?:new\s+)?(?:service|component|microservice)\s+(?:called\s+|named\s+)?["']?(.+?)["']?$/i);
     const addApiMatch   = input.match(/add\s+(?:a?\s*)?.*?(GET|POST|PUT|DELETE|PATCH)?\s*(?:endpoint|route|api)\s+(\/\S+)/i);
+    const addS3Match    = input.match(/add\s+(?:an?\s+)?(?:aws\s+)?s3(?:\s+bucket)?(?:\s+for\s+(.+))?/i);
 
     if (renameMatch) {
       const [, from, to] = renameMatch;
@@ -839,6 +840,23 @@ function AgentCanvasInner() {
       setAskAiProcessing(false); return;
     }
 
+    if (addS3Match) {
+      const d = generatedData || {};
+      const components = d.components || [];
+      const exists = components.some(c => `${c.name || ''} ${c.type || ''}`.toLowerCase().includes('s3'));
+      if (exists) { setCanvasViewMode('system'); setAskAiResponse('AWS S3 bucket already exists in the system architecture.'); setAskAiProcessing(false); return; }
+      const purpose = (addS3Match[1] || 'file uploads').trim();
+      const newId = `s3-${Date.now()}`;
+      const s3Component = { id: newId, name: 'AWS S3 Bucket', type: 'Object Storage', description: `Store ${purpose}` };
+      const source = components.find(c => { const v = `${c.name || ''} ${c.type || ''}`.toLowerCase(); return v.includes('api') || v.includes('backend') || v.includes('web server') || v.includes('server'); });
+      const connections = [...(d.connections || [])];
+      if (source) connections.push({ from: source.id || source.name, to: newId });
+      useStore.setState({ generatedData: { ...d, components: [...components, s3Component], connections }, unsavedChanges: true });
+      setCanvasViewMode('system');
+      setAskAiResponse('Added AWS S3 Bucket for file uploads to the system architecture.');
+      setAskAiProcessing(false); return;
+    }
+
     // Fallback to backend
     try {
       const token = localStorage.getItem('token');
@@ -850,17 +868,33 @@ function AgentCanvasInner() {
         body: JSON.stringify({ content: `[Canvas AI] ${input}` }),
       });
       if (res.ok) {
-        const reader = res.body.getReader();
-        const dec = new TextDecoder();
-        let text = '';
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          dec.decode(value).split('\n').forEach(l => { if (l.startsWith('data: ')) text += l.slice(6); });
-          setAskAiResponse(text);
+        if (!res.body) { setAskAiResponse('AI returned an empty response.'); }
+        else {
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder('utf-8', { fatal: false });
+          let text = ''; let buffer = '';
+          const appendData = (raw) => {
+            if (!raw || raw === '[DONE]') return;
+            let data = raw;
+            try { const parsed = JSON.parse(raw); if (typeof parsed === 'string') data = parsed; else if (parsed && typeof parsed === 'object') data = parsed.content ?? parsed.text ?? parsed.delta ?? parsed.message ?? parsed.data ?? raw; } catch {}
+            if (typeof data !== 'string') data = String(data);
+            data = data.replace(/\\n/g, '\n'); text += data; setAskAiResponse(text);
+          };
+          const processEvent = (block) => { const lines = block.split(/\r?\n/).filter(line => line.startsWith('data:')).map(line => line.slice(5).replace(/^\s/, '')); if (lines.length) appendData(lines.join('\n')); };
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) { buffer += decoder.decode(); break; }
+            buffer += decoder.decode(value, { stream: true });
+            const events = buffer.split(/\r?\n\r?\n/); buffer = events.pop() || '';
+            for (const event of events) processEvent(event);
+          }
+          if (buffer.trim()) processEvent(buffer);
+          setAskAiResponse(text || 'Command received. Check the canvas views for updates.');
         }
       } else {
-        setAskAiResponse('Command received. Check the canvas views for updates.');
+        let message = `AI request failed (${res.status}).`;
+        try { const body = await res.json(); message = body.detail || body.message || message; } catch {}
+        setAskAiResponse(message);
       }
     } catch {
       setAskAiResponse('AI unavailable. Try commands like "rename table users to accounts" or "add component AuthService".');

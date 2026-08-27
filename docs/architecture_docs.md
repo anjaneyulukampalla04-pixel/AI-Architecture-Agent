@@ -1,35 +1,35 @@
-# Project Executive Summary & Creators
-The CloudStore E-commerce Portal is a comprehensive system designed to parse, process, and store binary data. This project was created by a team of experienced developers and architects who aimed to build a scalable and secure platform for handling large amounts of binary data. The system ensures the integrity and security of the data during processing and storage, while also providing logging and auditing capabilities.
+# CloudStore E-commerce Portal
+## Project Executive Summary & Creators
+The CloudStore E-commerce Portal is a comprehensive online platform designed to provide a seamless shopping experience for customers. Developed by a team of experienced professionals, this project aims to create a robust, scalable, and user-friendly e-commerce solution. The creators of this project have ensured that the system is designed with the latest technologies and best practices in mind, providing a high level of reliability, security, and performance.
 
 ## Functional & Non-Functional Requirements
-The CloudStore E-commerce Portal is designed to meet several key requirements. **Data Processing** is a critical aspect of the system, which must be able to **parse and process binary data**, as well as **extract relevant information** from it. The system must also be able to **handle large amounts of binary data**, ensuring that it can scale to meet the needs of the application. In terms of **data storage**, the system must be able to **store the processed binary data** in a database or file system, and **retrieve and display it on demand**. Additionally, the system must **ensure the integrity and security** of the binary data during processing and storage, and **handle errors and exceptions** that may occur during processing. The system must also provide **logging and auditing capabilities** for binary data processing activities, and **comply with relevant laws and regulations** regarding data processing and storage.
+The CloudStore E-commerce Portal is designed to meet a set of **functional** and **non-functional requirements**. The system must be able to handle **corrupted or malformed input data**, providing a mechanism for **error handling and logging**. This ensures that the system can recover from **failures and exceptions**, minimizing downtime and ensuring a high level of **availability**. Additionally, the system must provide a **user-friendly interface** for **monitoring and debugging**, allowing administrators to easily identify and resolve issues. The system must also ensure **data integrity and consistency**, guaranteeing that customer data is accurate and secure.
 
 ## Logical Component Architecture & Patterns Applied
-The CloudStore E-commerce Portal consists of several logical components that work together to provide a scalable and secure platform for handling binary data. The **Web Server** handles incoming requests and serves as the entry point for the system. The **API Server** processes binary data and handles business logic, while the **Database Server** stores processed binary data. A **Cache Layer** is used to improve performance by caching frequently accessed data, and a **Load Balancer** distributes incoming traffic across multiple instances of the web server. The system also includes a **Message Queue** to handle asynchronous processing of binary data, and a **File System** to store raw binary data for auditing and logging purposes. These components work together to provide a robust and scalable architecture for the CloudStore E-commerce Portal.
+The CloudStore E-commerce Portal consists of several **logical components**, each designed to perform a specific function. The **Web Server** handles user requests and provides a user-friendly interface for monitoring and debugging. The **API Backend Server** processes requests, handles errors, and interacts with the database. The **Database Server** stores and manages data, ensuring data integrity and consistency. The **Message Queue** handles asynchronous tasks, such as error logging and notification. Finally, the **Load Balancer** distributes traffic, ensures high availability, and provides redundancy. These components work together to provide a **scalable** and **reliable** e-commerce solution.
 
 ## Database Design
-The CloudStore E-commerce Portal uses a **PostgreSQL** database engine to store processed binary data. The database consists of several tables, including **binary_data**, **logs**, and **audits**. The **binary_data** table stores the processed binary data, while the **logs** table stores logs of binary data processing activities. The **audits** table stores information about the processing and storage of binary data, providing a record of all activities related to the data.
+The CloudStore E-commerce Portal uses **PostgreSQL** as its database engine, providing a robust and scalable data storage solution. The database consists of several tables, including **users**, **logs**, and **sessions**. These tables are designed to store customer data, system logs, and session information, respectively. The database schema is designed to ensure **data integrity and consistency**, with relationships between tables established to provide a high level of **data normalization**.
 
 ## REST API Specifications & Routing Map
-The CloudStore E-commerce Portal provides a RESTful API for interacting with the system. The following endpoints are available:
+The CloudStore E-commerce Portal provides a set of REST endpoints for interacting with the system. The following endpoints are available:
 | Method | Route | Description |
-| --- | --- | --- |
-| POST | /api/binary-data | Upload binary data for processing |
-| GET | /api/binary-data/{id} | Retrieve processed binary data by ID |
-| GET | /api/binary-data/{id}/info | Retrieve information extracted from binary data |
-| GET | /api/binary-data/{id}/status | Retrieve status of binary data processing |
-| GET | /api/binary-data | Retrieve list of processed binary data |
-| GET | /api/logs | Retrieve logs of binary data processing activities |
-| GET | /api/errors | Retrieve list of errors during binary data processing |
+|---|---|---|
+| GET | /api/healthcheck | Check the health of the system |
+| GET | /api/logs | Retrieve system logs |
+| GET | /api/errors | Retrieve system errors |
+| GET | /api/debug | Retrieve system debug information |
+| GET | /api/metrics | Retrieve system metrics |
+These endpoints provide a **programmatic interface** for interacting with the system, allowing developers to build custom applications and integrations.
 
 ## Physical Cloud Topology, Service mappings, and Cost estimates
-The CloudStore E-commerce Portal is deployed on a cloud-based infrastructure, with multiple services working together to provide a scalable and secure platform. The estimated monthly cost of the system is **$90.25**, which includes the cost of all services and infrastructure required to run the application.
+The CloudStore E-commerce Portal is deployed on a **cloud-based infrastructure**, providing a high level of **scalability** and **reliability**. The system consists of several cloud services, including **web servers**, **database servers**, and **load balancers**. These services are mapped to specific **cloud providers**, ensuring a high level of **availability** and **performance**. The estimated monthly cost of the system is **$135.00**, providing a **cost-effective** e-commerce solution.
 
 ## Operations Runbook
 To deploy the CloudStore E-commerce Portal, follow these steps:
-* Initialize the Terraform configuration by running `terraform init`
-* Apply the Terraform configuration by running `terraform apply`
-* Configure the Web Server, API Server, and Database Server according to the logical component architecture
-* Deploy the Cache Layer, Load Balancer, and Message Queue to improve performance and scalability
-* Configure the File System to store raw binary data for auditing and logging purposes
-* Test the system to ensure that it is working as expected, and make any necessary adjustments to the configuration or code.
+* Initialize the **Terraform configuration**, specifying the desired cloud provider and region.
+* Create the **infrastructure resources**, including web servers, database servers, and load balancers.
+* Configure the **database schema**, establishing relationships between tables and ensuring data integrity and consistency.
+* Deploy the **application code**, configuring the web server and API backend server.
+* Test the system, verifying that all components are functioning correctly and that the system is **highly available** and **performant**.
+By following these steps, administrators can easily deploy and manage the CloudStore E-commerce Portal, ensuring a high level of **reliability** and **performance**.

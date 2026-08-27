@@ -1,41 +1,26 @@
 
          output "ecs_cluster_name" {
             value       = aws_ecs_cluster.main.name
-            description = "ECS cluster name"
+            description = "The name of the ECS cluster"
          }
 
-         output "ecs_task_definition_arn_comp-001" {
-            value       = aws_ecs_task_definition.comp-001.arn
-            description = "ECS task definition ARN for COMP-001"
-         }
-
-         output "ecs_task_definition_arn_comp-002" {
-            value       = aws_ecs_task_definition.comp-002.arn
-            description = "ECS task definition ARN for COMP-002"
+         output "ecs_service_name" {
+            value       = aws_ecs_service.comp_001.name
+            description = "The name of the ECS service"
          }
 
          output "rds_instance_endpoint" {
-            value       = aws_db_instance.comp-003.endpoint
-            description = "RDS instance endpoint"
-         }
-
-         output "elasticache_cluster_endpoint" {
-            value       = aws_elasticache_cluster.comp-004.cache_nodes[0].address
-            description = "ElastiCache cluster endpoint"
-         }
-
-         output "alb_dns_name" {
-            value       = aws_lb.comp-005.dns_name
-            description = "ALB DNS name"
+            value       = aws_db_instance.comp_003.endpoint
+            description = "The endpoint of the RDS instance"
          }
 
          output "sqs_queue_url" {
-            value       = aws_sqs_queue.comp-006.id
-            description = "SQS queue URL"
+            value       = aws_sqs_queue.comp_004.id
+            description = "The URL of the SQS queue"
          }
 
-         output "s3_bucket_name" {
-            value       = aws_s3_bucket.comp-007.id
-            description = "S3 bucket name"
+         output "alb_dns_name" {
+            value       = aws_alb.comp_005.dns_name
+            description = "The DNS name of the Application Load Balancer"
          }
       

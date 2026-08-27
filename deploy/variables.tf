@@ -2,46 +2,42 @@
          variable "aws_region" {
             type        = string
             default     = "us-east-1"
-            description = "AWS region"
-         }
-
-         variable "aws_availability_zone" {
-            type        = string
-            default     = "us-east-1a"
-            description = "AWS availability zone"
+            description = "The AWS region to deploy to"
          }
 
          variable "ecs_task_cpu" {
             type        = number
             default     = 1024
-            description = "ECS task CPU"
+            description = "The CPU to allocate to the ECS task"
          }
 
          variable "ecs_task_memory" {
             type        = number
-            default     = 512
-            description = "ECS task memory"
+            default     = 2048
+            description = "The memory to allocate to the ECS task"
          }
 
          variable "rds_instance_class" {
             type        = string
             default     = "db.t3.micro"
-            description = "RDS instance class"
+            description = "The instance class to use for the RDS instance"
          }
 
-         variable "elasticache_node_type" {
-            type        = string
-            default     = "cache.t3.micro"
-            description = "ElastiCache node type"
+         variable "rds_allocated_storage" {
+            type        = number
+            default     = 20
+            description = "The amount of storage to allocate to the RDS instance"
          }
 
-         variable "alb_security_group_id" {
+         variable "sqs_queue_name" {
             type        = string
-            description = "ALB security group ID"
+            default     = "comp-004-queue"
+            description = "The name of the SQS queue"
          }
 
-         variable "alb_subnet_id" {
+         variable "alb_name" {
             type        = string
-            description = "ALB subnet ID"
+            default     = "comp-005-alb"
+            description = "The name of the Application Load Balancer"
          }
       
